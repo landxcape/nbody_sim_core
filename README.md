@@ -107,6 +107,17 @@ final engine = IsolateSimulationEngine(
 );
 ```
 
+Direct Rust backend:
+
+```dart
+import 'package:nbody_sim_core/engine.dart';
+
+final engine = RustFfiSimulationEngine(
+  // Optional if GRAVITY_ENGINE_LIB is set or library is in ./native:
+  libraryPath: '/absolute/path/to/libgravity_engine.dylib',
+);
+```
+
 ## Rust Native Build
 
 The package includes:
@@ -189,6 +200,31 @@ await engine.loadScenario(scenario);
 // Point-in-time snapshot
 final snap = await engine.snapshot();
 await engine.restoreSnapshot(snap);
+```
+
+JSON import/export:
+
+```dart
+import 'dart:convert';
+import 'package:nbody_sim_core/models.dart';
+
+// Export scenario JSON string
+final scenario = await engine.saveScenario();
+final scenarioJsonString = jsonEncode(scenario.toJson());
+
+// Import scenario JSON string
+final parsedScenarioMap = jsonDecode(scenarioJsonString) as Map<String, dynamic>;
+final importedScenario = ScenarioModel.fromJson(parsedScenarioMap);
+await engine.loadScenario(importedScenario);
+
+// Export snapshot JSON string
+final snapshot = await engine.snapshot();
+final snapshotJsonString = jsonEncode(snapshot.toJson());
+
+// Import snapshot JSON string
+final parsedSnapshotMap = jsonDecode(snapshotJsonString) as Map<String, dynamic>;
+final importedSnapshot = SnapshotModel.fromJson(parsedSnapshotMap);
+await engine.restoreSnapshot(importedSnapshot);
 ```
 
 ## Schema Migration + Validation
