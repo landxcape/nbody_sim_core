@@ -1,9 +1,9 @@
 name: nbody_sim_core
 description: Engine-agnostic N-body simulation core models, contracts, adapters, and utilities.
 version: 0.1.0
-homepage: https://github.com/shakyapurna/nbody_sim_core
-repository: https://github.com/shakyapurna/nbody_sim_core
-issue_tracker: https://github.com/shakyapurna/nbody_sim_core/issues
+homepage: https://github.com/landxcape/nbody_sim_core
+repository: https://github.com/landxcape/nbody_sim_core
+issue_tracker: https://github.com/landxcape/nbody_sim_core/issues
 topics:
   - nbody
   - gravity
