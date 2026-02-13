@@ -1,6 +1,6 @@
 name: nbody_sim_core
 description: Engine-agnostic N-body simulation core models, contracts, adapters, and utilities.
-version: 0.1.1
+version: 0.1.2
 homepage: https://github.com/landxcape/nbody_sim_core
 repository: https://github.com/landxcape/nbody_sim_core
 issue_tracker: https://github.com/landxcape/nbody_sim_core/issues

@@ -250,6 +250,7 @@ class RustFfiBindings {
 
   static List<String> _candidateLibraryPaths(String? explicitPath) {
     final fileName = _libraryFileName();
+    final abiFolder = _abiFolderName();
     final candidates = <String>[];
 
     if (explicitPath != null && explicitPath.isNotEmpty) {
@@ -262,8 +263,14 @@ class RustFfiBindings {
     }
 
     final cwd = Directory.current.path;
+    candidates.add('$cwd/native/$abiFolder/$fileName');
     candidates.add('$cwd/native/$fileName');
     candidates.add('$cwd/rust/gravity_engine/target/release/$fileName');
+    final packageRoot = _packageRootFromPackageConfig();
+    if (packageRoot != null) {
+      candidates.add('$packageRoot/native/$abiFolder/$fileName');
+      candidates.add('$packageRoot/native/$fileName');
+    }
     candidates.add(fileName);
 
     return candidates.toSet().toList(growable: false);
@@ -281,5 +288,87 @@ class RustFfiBindings {
     }
 
     throw UnsupportedError('Unsupported platform for Rust FFI engine');
+  }
+
+  static String _abiFolderName() {
+    switch (Abi.current()) {
+      case Abi.androidArm:
+        return 'android-arm';
+      case Abi.androidArm64:
+        return 'android-arm64';
+      case Abi.androidIA32:
+        return 'android-ia32';
+      case Abi.androidX64:
+        return 'android-x64';
+      case Abi.fuchsiaArm64:
+        return 'fuchsia-arm64';
+      case Abi.fuchsiaX64:
+        return 'fuchsia-x64';
+      case Abi.iosArm:
+        return 'ios-arm';
+      case Abi.iosArm64:
+        return 'ios-arm64';
+      case Abi.iosX64:
+        return 'ios-x64';
+      case Abi.linuxArm:
+        return 'linux-arm';
+      case Abi.linuxArm64:
+        return 'linux-arm64';
+      case Abi.linuxIA32:
+        return 'linux-ia32';
+      case Abi.linuxX64:
+        return 'linux-x64';
+      case Abi.macosArm64:
+        return 'macos-arm64';
+      case Abi.macosX64:
+        return 'macos-x64';
+      case Abi.windowsArm64:
+        return 'windows-arm64';
+      case Abi.windowsIA32:
+        return 'windows-ia32';
+      case Abi.windowsX64:
+        return 'windows-x64';
+    }
+    throw UnsupportedError('Unsupported ABI for Rust FFI engine');
+  }
+
+  static String? _packageRootFromPackageConfig() {
+    final configFile = File(
+      '${Directory.current.path}/.dart_tool/package_config.json',
+    );
+    if (!configFile.existsSync()) {
+      return null;
+    }
+
+    try {
+      final root = jsonDecode(configFile.readAsStringSync());
+      if (root is! Map<String, dynamic>) {
+        return null;
+      }
+      final packages = root['packages'];
+      if (packages is! List) {
+        return null;
+      }
+
+      for (final package in packages) {
+        if (package is! Map<String, dynamic>) {
+          continue;
+        }
+        if (package['name'] != 'nbody_sim_core') {
+          continue;
+        }
+        final rootUriRaw = package['rootUri'];
+        if (rootUriRaw is! String || rootUriRaw.isEmpty) {
+          return null;
+        }
+
+        final configDir = configFile.parent.uri;
+        return configDir.resolve(rootUriRaw).toFilePath();
+      }
+    } catch (_) {
+      return null;
+    }
+
+    return null;
   }
 }

@@ -1,5 +1,7 @@
 .dart_tool/
 build/
 pubspec.lock
-native/
+native/libgravity_engine.dylib
+native/libgravity_engine.so
+native/gravity_engine.dll
 rust/gravity_engine/target/

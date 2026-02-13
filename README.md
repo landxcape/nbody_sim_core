@@ -14,7 +14,7 @@ High-iteration N-body vibes, production-ready core APIs.
 
 ```yaml
 dependencies:
-  nbody_sim_core: ^0.1.0
+  nbody_sim_core: ^0.1.2
 ```
 
 ## Public API
@@ -133,8 +133,11 @@ From package root:
 # Run Rust tests
 cargo test --manifest-path rust/gravity_engine/Cargo.toml
 
-# Build native library and copy to ./native
+# Build native library for host target and copy to ./native/<abi>/
 ./tool/build_rust_engine.sh
+
+# Build specific targets and copy to ./native/<abi>/
+./tool/build_rust_engine.sh aarch64-apple-darwin x86_64-apple-darwin
 ```
 
 On Windows PowerShell:
@@ -148,14 +151,37 @@ Generated library names:
 2. Linux: `libgravity_engine.so`
 3. Windows: `gravity_engine.dll`
 
+Bundled ABI folders:
+1. `native/macos-arm64/`
+2. `native/macos-x64/`
+3. `native/linux-x64/`
+4. `native/windows-x64/`
+
 ## Rust Library Discovery
 
 When using Rust backends, `RustFfiBindings` resolves the native library in this order:
 1. Explicit `libraryPath` passed into engine/bindings.
 2. `GRAVITY_ENGINE_LIB` environment variable.
-3. `./native/<platform-library-name>`
-4. `./rust/gravity_engine/target/release/<platform-library-name>`
-5. Dynamic loader default lookup by filename.
+3. `./native/<abi>/<platform-library-name>`
+4. `./native/<platform-library-name>`
+5. `./rust/gravity_engine/target/release/<platform-library-name>`
+6. `<nbody_sim_core package root>/native/<abi>/<platform-library-name>`
+7. `<nbody_sim_core package root>/native/<platform-library-name>`
+8. Dynamic loader default lookup by filename.
+
+The package root path is resolved from the consumer app's
+`.dart_tool/package_config.json`, so binaries bundled inside the package can be
+loaded without manually copying them into app `cwd`.
+
+## Prebuilt Binary Pipeline
+
+Desktop Rust FFI targets are built in CI via:
+1. `.github/workflows/build-native-binaries.yml`
+
+Current CI matrix:
+1. macOS: `aarch64-apple-darwin`, `x86_64-apple-darwin`
+2. Linux: `x86_64-unknown-linux-gnu`
+3. Windows: `x86_64-pc-windows-msvc`
 
 ## Runtime Edits (Create/Update/Delete Bodies)
 

@@ -1,0 +1,65 @@
+name: build-native-binaries
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - rust/gravity_engine/**
+      - tool/build_rust_engine.sh
+      - tool/build_rust_engine.ps1
+      - .github/workflows/build-native-binaries.yml
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-14
+            target: aarch64-apple-darwin
+            abi_folder: macos-arm64
+            lib_name: libgravity_engine.dylib
+          - os: macos-14
+            target: x86_64-apple-darwin
+            abi_folder: macos-x64
+            lib_name: libgravity_engine.dylib
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            abi_folder: linux-x64
+            lib_name: libgravity_engine.so
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            abi_folder: windows-x64
+            lib_name: gravity_engine.dll
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Build Rust library
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo build --manifest-path rust/gravity_engine/Cargo.toml --release --lib --target "${{ matrix.target }}"
+
+      - name: Stage binary
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "native/${{ matrix.abi_folder }}"
+          cp "rust/gravity_engine/target/${{ matrix.target }}/release/${{ matrix.lib_name }}" \
+            "native/${{ matrix.abi_folder }}/${{ matrix.lib_name }}"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.abi_folder }}
+          path: native/${{ matrix.abi_folder }}/${{ matrix.lib_name }}
+          if-no-files-found: error
