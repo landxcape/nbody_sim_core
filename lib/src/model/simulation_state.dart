@@ -1,7 +1,9 @@
 import 'simulation_body.dart';
 import 'simulation_config.dart';
 
+/// Immutable simulation state snapshot.
 class SimulationState {
+  /// Creates a simulation state.
   const SimulationState({
     required this.tick,
     required this.simTime,
@@ -9,11 +11,19 @@ class SimulationState {
     required this.bodies,
   });
 
+  /// Current tick index.
   final int tick;
+
+  /// Current simulation time.
   final double simTime;
+
+  /// Active simulation config.
   final SimulationConfig config;
+
+  /// Active bodies.
   final List<SimulationBody> bodies;
 
+  /// Empty initial state constant.
   static SimulationState get empty {
     return const SimulationState(
       tick: 0,
@@ -23,6 +33,7 @@ class SimulationState {
     );
   }
 
+  /// Serializes this state to JSON.
   Map<String, dynamic> toJson() {
     return {
       'tick': tick,
@@ -32,6 +43,7 @@ class SimulationState {
     };
   }
 
+  /// Deserializes a state from JSON.
   factory SimulationState.fromJson(Map<String, dynamic> json) {
     final bodiesJson = (json['bodies'] as List?) ?? const [];
 

@@ -1,6 +1,8 @@
 import 'vector2.dart';
 
+/// Aggregated simulation metrics for diagnostics and telemetry.
 class SimulationAnalytics {
+  /// Creates an analytics payload.
   const SimulationAnalytics({
     required this.totalEnergy,
     required this.energyDriftRatio,
@@ -16,6 +18,7 @@ class SimulationAnalytics {
     required this.barnesHutTicks,
   });
 
+  /// Empty analytics baseline.
   static const empty = SimulationAnalytics(
     totalEnergy: 0,
     energyDriftRatio: 0,
@@ -31,16 +34,39 @@ class SimulationAnalytics {
     barnesHutTicks: 0,
   );
 
+  /// Total system energy.
   final double totalEnergy;
+
+  /// Relative energy drift ratio.
   final double energyDriftRatio;
+
+  /// Total linear momentum vector.
   final Vec2 totalMomentum;
+
+  /// Total angular momentum scalar.
   final double angularMomentum;
+
+  /// Smallest pairwise distance observed.
   final double nearestApproach;
+
+  /// Current body count.
   final int bodyCount;
+
+  /// Current tick.
   final int tick;
+
+  /// Current simulation time.
   final double simTime;
+
+  /// Average tick runtime in microseconds.
   final int averageTickMicros;
+
+  /// Last solver mode used.
   final String lastSolverMode;
+
+  /// Pairwise solver tick count.
   final int pairwiseTicks;
+
+  /// Barnes-Hut solver tick count.
   final int barnesHutTicks;
 }

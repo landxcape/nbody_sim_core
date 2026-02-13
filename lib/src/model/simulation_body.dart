@@ -1,6 +1,8 @@
 import 'vector2.dart';
 
+/// Immutable simulation body state.
 class SimulationBody {
+  /// Creates a simulation body.
   const SimulationBody({
     required this.id,
     required this.mass,
@@ -13,16 +15,34 @@ class SimulationBody {
     this.alive = true,
   });
 
+  /// Stable body identifier.
   final String id;
+
+  /// Optional human-readable label.
   final String? label;
+
+  /// Optional kind/category tag.
   final String? kind;
+
+  /// Body mass value.
   final double mass;
+
+  /// Body render/collision radius.
   final double radius;
+
+  /// Body position vector.
   final Vec2 position;
+
+  /// Body velocity vector.
   final Vec2 velocity;
+
+  /// Body ARGB color value.
   final int colorValue;
+
+  /// Whether body is active in simulation.
   final bool alive;
 
+  /// Returns a copy with selected fields replaced.
   SimulationBody copyWith({
     String? id,
     String? label,
@@ -47,6 +67,7 @@ class SimulationBody {
     );
   }
 
+  /// Validates body values and returns an error message if invalid.
   String? validate() {
     if (id.trim().isEmpty) {
       return 'body id must not be empty';
@@ -66,6 +87,7 @@ class SimulationBody {
     return null;
   }
 
+  /// Serializes this body to JSON.
   Map<String, dynamic> toJson() {
     final metadata = <String, dynamic>{};
     if (label != null && label!.isNotEmpty) {
@@ -87,6 +109,7 @@ class SimulationBody {
     };
   }
 
+  /// Deserializes a body from JSON.
   factory SimulationBody.fromJson(Map<String, dynamic> json) {
     final metadata = (json['metadata'] as Map?)?.cast<String, dynamic>();
     final label = metadata?['label'] as String?;

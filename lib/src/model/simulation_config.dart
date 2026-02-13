@@ -1,12 +1,18 @@
+/// Supported integration algorithms for advancing simulation state.
 enum IntegratorKind { semiImplicitEuler, velocityVerlet, rk4 }
 
+/// Collision handling strategy.
 enum CollisionMode { elastic, inelasticMerge, ignore }
 
+/// Timestep policy for integration.
 enum DtPolicy { fixed, adaptive }
 
+/// Gravity solver mode.
 enum GravitySolver { pairwise, barnesHut, auto }
 
+/// Immutable runtime physics configuration.
 class SimulationConfig {
+  /// Creates a simulation configuration.
   const SimulationConfig({
     required this.gravityConstant,
     required this.softeningEpsilon,
@@ -20,17 +26,37 @@ class SimulationConfig {
     this.barnesHutThreshold = 256,
   });
 
+  /// Gravitational constant used in force computation.
   final double gravityConstant;
+
+  /// Softening epsilon used to avoid singularities.
   final double softeningEpsilon;
+
+  /// Base timestep size.
   final double dt;
+
+  /// Timestep policy.
   final DtPolicy dtPolicy;
+
+  /// Integration algorithm.
   final IntegratorKind integrator;
+
+  /// Collision behavior mode.
   final CollisionMode collisionMode;
+
+  /// Whether deterministic replay constraints are enabled.
   final bool deterministic;
+
+  /// Solver mode selection.
   final GravitySolver gravitySolver;
+
+  /// Barnes-Hut theta parameter.
   final double barnesHutTheta;
+
+  /// Body-count threshold for Barnes-Hut switching.
   final int barnesHutThreshold;
 
+  /// Predefined scientific default profile.
   static const scientificDefault = SimulationConfig(
     gravityConstant: 1,
     softeningEpsilon: 1e-4,
@@ -44,6 +70,7 @@ class SimulationConfig {
     barnesHutThreshold: 256,
   );
 
+  /// Returns a copy with the provided fields replaced.
   SimulationConfig copyWith({
     double? gravityConstant,
     double? softeningEpsilon,
@@ -70,6 +97,7 @@ class SimulationConfig {
     );
   }
 
+  /// Validates config values and returns an error message if invalid.
   String? validate() {
     if (!gravityConstant.isFinite || gravityConstant <= 0) {
       return 'gravityConstant must be finite and > 0';
@@ -92,6 +120,7 @@ class SimulationConfig {
     return null;
   }
 
+  /// Serializes this config to JSON.
   Map<String, dynamic> toJson() {
     return {
       'gravityConstant': gravityConstant,
@@ -107,6 +136,7 @@ class SimulationConfig {
     };
   }
 
+  /// Deserializes a config from JSON.
   factory SimulationConfig.fromJson(Map<String, dynamic> json) {
     return SimulationConfig(
       gravityConstant: (json['gravityConstant'] as num).toDouble(),

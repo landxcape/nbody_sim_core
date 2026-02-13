@@ -1,8 +1,12 @@
+/// Camera behavior mode for view-layer consumers.
 enum CameraMode { fit, free, followSelected }
 
+/// Render quality profile.
 enum RenderQuality { low, medium, high }
 
+/// View/render option bundle.
 class RenderOptions {
+  /// Creates render options.
   const RenderOptions({
     this.showVelocityVectors = true,
     this.showTrails = true,
@@ -11,12 +15,22 @@ class RenderOptions {
     this.quality = RenderQuality.medium,
   });
 
+  /// Whether velocity vectors should be shown.
   final bool showVelocityVectors;
+
+  /// Whether trails should be shown.
   final bool showTrails;
+
+  /// Whether field overlay should be shown.
   final bool showFieldOverlay;
+
+  /// Whether lensing overlay should be shown.
   final bool showLensingOverlay;
+
+  /// Quality preset used for derived view parameters.
   final RenderQuality quality;
 
+  /// Returns a copy with selected values replaced.
   RenderOptions copyWith({
     bool? showVelocityVectors,
     bool? showTrails,
@@ -33,6 +47,7 @@ class RenderOptions {
     );
   }
 
+  /// Suggested trail length for this quality profile.
   int get trailLength {
     switch (quality) {
       case RenderQuality.low:
@@ -44,6 +59,7 @@ class RenderOptions {
     }
   }
 
+  /// Suggested glow alpha for this quality profile.
   double get glowAlpha {
     switch (quality) {
       case RenderQuality.low:
@@ -55,6 +71,7 @@ class RenderOptions {
     }
   }
 
+  /// Suggested field sample density for this quality profile.
   int get fieldSamples {
     switch (quality) {
       case RenderQuality.low:

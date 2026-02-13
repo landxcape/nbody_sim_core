@@ -2,17 +2,24 @@ import 'simulation_body.dart';
 import 'simulation_config.dart';
 import 'vector2.dart';
 
+/// Base type for runtime body edit operations.
 sealed class BodyEdit {
+  /// Creates a body edit marker.
   const BodyEdit();
 }
 
+/// Adds a new body to the simulation.
 class BodyCreate extends BodyEdit {
+  /// Creates a body-creation edit.
   const BodyCreate(this.body);
 
+  /// Body payload to insert into the active simulation state.
   final SimulationBody body;
 }
 
+/// Updates one or more properties of an existing body.
 class BodyUpdate extends BodyEdit {
+  /// Creates a body-update edit.
   const BodyUpdate({
     required this.id,
     this.mass,
@@ -25,24 +32,46 @@ class BodyUpdate extends BodyEdit {
     this.colorValue,
   });
 
+  /// Identifier of the body to modify.
   final String id;
+
+  /// Optional updated mass value.
   final double? mass;
+
+  /// Optional updated radius value.
   final double? radius;
+
+  /// Optional updated position.
   final Vec2? position;
+
+  /// Optional updated velocity.
   final Vec2? velocity;
+
+  /// Optional alive/dead flag.
   final bool? alive;
+
+  /// Optional human-readable label.
   final String? label;
+
+  /// Optional body kind/category tag.
   final String? kind;
+
+  /// Optional ARGB color value.
   final int? colorValue;
 }
 
+/// Removes a body from the simulation.
 class BodyDelete extends BodyEdit {
+  /// Creates a body-delete edit.
   const BodyDelete(this.id);
 
+  /// Identifier of the body to remove.
   final String id;
 }
 
+/// Aggregated telemetry returned by a simulation stepping call.
 class StepSummary {
+  /// Creates a step summary payload.
   const StepSummary({
     required this.ticksApplied,
     required this.finalTick,
@@ -58,19 +87,43 @@ class StepSummary {
     this.lastSolverMode = 'pairwise',
   });
 
+  /// Number of ticks applied for this step call.
   final int ticksApplied;
+
+  /// Final simulation tick after applying the step.
   final int finalTick;
+
+  /// Final simulation time after applying the step.
   final double simTime;
+
+  /// Number of collision events detected.
   final int collisionEvents;
+
+  /// Number of merge events applied.
   final int mergedEvents;
+
+  /// Runtime warnings produced while stepping.
   final List<String> warnings;
+
+  /// Number of ticks evaluated with pairwise solver.
   final int pairwiseTicks;
+
+  /// Number of ticks evaluated with Barnes-Hut solver.
   final int barnesHutTicks;
+
+  /// Total wall time in microseconds for this step call.
   final int stepWallTimeMicros;
+
+  /// Average tick cost in microseconds.
   final int averageTickMicros;
+
+  /// Maximum body count seen during this step call.
   final int maxBodyCount;
+
+  /// Last solver mode used (`pairwise` or `barnes_hut` style value).
   final String lastSolverMode;
 
+  /// Serializes this summary to JSON.
   Map<String, dynamic> toJson() {
     return {
       'ticksApplied': ticksApplied,
@@ -88,6 +141,7 @@ class StepSummary {
     };
   }
 
+  /// Deserializes a step summary from JSON.
   factory StepSummary.fromJson(Map<String, dynamic> json) {
     final warningsJson = (json['warnings'] as List?) ?? const [];
     return StepSummary(
@@ -109,7 +163,9 @@ class StepSummary {
   }
 }
 
+/// Portable scenario document used for save/load operations.
 class ScenarioModel {
+  /// Creates a scenario model.
   const ScenarioModel({
     required this.schemaVersion,
     required this.name,
@@ -121,15 +177,31 @@ class ScenarioModel {
     this.tags = const [],
   });
 
+  /// Scenario schema version.
   final String schemaVersion;
+
+  /// Display name of the scenario.
   final String name;
+
+  /// Engine configuration used by the scenario.
   final SimulationConfig config;
+
+  /// Bodies included in the scenario.
   final List<SimulationBody> bodies;
+
+  /// Optional description text.
   final String? description;
+
+  /// Optional author string.
   final String? author;
+
+  /// Optional creation timestamp.
   final String? createdAt;
+
+  /// Optional tag collection for categorization.
   final List<String> tags;
 
+  /// Serializes this scenario to JSON.
   Map<String, dynamic> toJson() {
     return {
       'schemaVersion': schemaVersion,
@@ -145,6 +217,7 @@ class ScenarioModel {
     };
   }
 
+  /// Deserializes a scenario from JSON.
   factory ScenarioModel.fromJson(Map<String, dynamic> json) {
     final metadata =
         (json['metadata'] as Map?)?.cast<String, dynamic>() ??
@@ -173,7 +246,9 @@ class ScenarioModel {
   }
 }
 
+/// Point-in-time snapshot payload used for restore/replay workflows.
 class SnapshotModel {
+  /// Creates a snapshot model.
   const SnapshotModel({
     required this.schemaVersion,
     required this.tick,
@@ -183,13 +258,25 @@ class SnapshotModel {
     this.createdAt,
   });
 
+  /// Snapshot schema version.
   final String schemaVersion;
+
+  /// Tick captured by this snapshot.
   final int tick;
+
+  /// Simulation time captured by this snapshot.
   final double simTime;
+
+  /// Hash string representing the config used to produce this snapshot.
   final String configHash;
+
+  /// Body collection captured in this snapshot.
   final List<SimulationBody> bodies;
+
+  /// Optional timestamp when snapshot was created.
   final String? createdAt;
 
+  /// Serializes this snapshot to JSON.
   Map<String, dynamic> toJson() {
     return {
       'schemaVersion': schemaVersion,
@@ -201,6 +288,7 @@ class SnapshotModel {
     };
   }
 
+  /// Deserializes a snapshot from JSON.
   factory SnapshotModel.fromJson(Map<String, dynamic> json) {
     final bodiesJson = (json['bodies'] as List?) ?? const [];
 
@@ -220,6 +308,7 @@ class SnapshotModel {
   }
 }
 
+/// Converts a [BodyEdit] polymorphic value into transport JSON.
 Map<String, dynamic> bodyEditToJson(BodyEdit edit) {
   if (edit is BodyCreate) {
     return {'create': edit.body.toJson()};
@@ -262,6 +351,7 @@ Map<String, dynamic> bodyEditToJson(BodyEdit edit) {
   throw StateError('Unsupported body edit type: ${edit.runtimeType}');
 }
 
+/// Parses a [BodyEdit] from transport JSON.
 BodyEdit bodyEditFromJson(Map<String, dynamic> json) {
   if (json.containsKey('create')) {
     final payload = (json['create'] as Map).cast<String, dynamic>();
