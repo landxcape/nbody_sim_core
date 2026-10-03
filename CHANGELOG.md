@@ -1,3 +1,7 @@
+## 0.1.3
+- Expanded pub.dev `topics` with `particles`.
+- Added `.pubignore` to prevent bundling build and compilation caches.
+
 ## 0.1.2
 - Add ABI-aware Rust native library lookup (`native/<abi>/...`) for bundled
   desktop binaries.

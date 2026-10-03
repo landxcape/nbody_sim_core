@@ -1,0 +1,20 @@
+# Build and cache
+build/
+.dart_tool/
+
+# Rust build artifacts
+target/
+.cargo/
+
+# Documentation and project notes
+docs/
+
+# IDE and OS files
+.vscode/
+.idea/
+*.iml
+.DS_Store
+
+# Example build
+example/build/
+example/.dart_tool/
