@@ -1,3 +1,6 @@
+## 0.1.4
+- Documentation and overview refinements.
+
 ## 0.1.3
 - Expanded pub.dev `topics` with `particles`.
 - Added `.pubignore` to prevent bundling build and compilation caches.
