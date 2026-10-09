@@ -1,7 +1,6 @@
 # nbody_sim_core
 
-Engine-agnostic N-body simulation core package for Dart.
-High-iteration N-body vibes, production-ready core APIs.
+Core data models, numerical integrators, and engine backends for N-body gravitational simulations in Dart.
 
 `nbody_sim_core` provides:
 1. Physics domain models and contracts.
