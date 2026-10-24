@@ -1,4 +1,6 @@
 import 'package:nbody_sim_core/nbody_sim_core.dart';
+import 'package:nbody_sim_core/src/engine/rust_ffi_bindings_stub.dart'
+    as stub;
 import 'package:test/test.dart';
 
 void main() {
@@ -25,5 +27,12 @@ void main() {
 
     final issues = ScenarioSchemaValidator.validateScenarioJson(scenario);
     expect(issues, isEmpty);
+  });
+
+  test('RustFfiBindings stub throws UnsupportedError when invoked on web', () {
+    expect(
+      () => stub.RustFfiBindings.open(),
+      throwsA(isA<UnsupportedError>()),
+    );
   });
 }

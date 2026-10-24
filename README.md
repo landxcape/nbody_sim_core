@@ -85,14 +85,16 @@ Future<void> main() async {
 Use whichever backend fits your runtime and performance goals.
 
 1. `DartSimulationEngine`
-   - Easiest setup.
-   - No native prerequisites.
+   - Easiest setup, 100% pure Dart.
+   - Fully supported on **Web** and **WebAssembly (WASM)**, mobile, desktop, and server.
+   - No native prerequisites or toolchains required.
 2. `IsolateSimulationEngine`
    - Runs simulation off the UI/main isolate.
    - Backend selection: `EngineBackend.auto`, `EngineBackend.rust`, `EngineBackend.dart`.
 3. `RustFfiSimulationEngine`
-   - Direct native Rust backend.
-   - Highest performance path when native library is present.
+   - Direct native Rust backend via `dart:ffi`.
+   - Highest performance path when native library is present (desktop/mobile).
+   - Automatically stubbed on Web runtimes via conditional compilation.
 
 Example:
 
