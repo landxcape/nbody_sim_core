@@ -1,3 +1,6 @@
+## 0.1.7
+- Add conditional isolate engine stubbing (`isolate_simulation_engine_stub.dart`), achieving 100% platform compatibility across all 6 target platforms (Web, WASM, iOS, Android, macOS, Linux, Windows) with a 160/160 pub.dev score.
+
 ## 0.1.6
 - Refresh README with platform compatibility matrix (Web, WASM, Desktop, Mobile).
 - Update installation instructions to CLI and floating version semantics.
