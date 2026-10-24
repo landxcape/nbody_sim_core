@@ -1,3 +1,8 @@
+## 0.1.6
+- Refresh README with platform compatibility matrix (Web, WASM, Desktop, Mobile).
+- Update installation instructions to CLI and floating version semantics.
+- Clarify automatic ABI discovery for bundled desktop Rust binaries.
+
 ## 0.1.5
 - Add conditional FFI imports with web stubbing (`rust_ffi_bindings_stub.dart`), enabling full compilation and runtime compatibility on Web and WebAssembly (WASM).
 

@@ -2,6 +2,10 @@
 
 Core data models, numerical integrators, and engine backends for N-body gravitational simulations in Dart.
 
+[![pub package](https://img.shields.io/pub/v/nbody_sim_core.svg)](https://pub.dev/packages/nbody_sim_core)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/platform-web%20%7C%20wasm%20%7C%20macos%20%7C%20linux%20%7C%20windows%20%7C%20ios%20%7C%20android-blue)](https://pub.dev/packages/nbody_sim_core)
+
 `nbody_sim_core` provides:
 1. Physics domain models and contracts.
 2. Multiple engine backends (`Dart`, `Isolate`, `Rust FFI`).
@@ -11,9 +15,17 @@ Core data models, numerical integrators, and engine backends for N-body gravitat
 
 ## Install
 
+Add via CLI:
+
+```bash
+dart pub add nbody_sim_core
+```
+
+Or add to your `pubspec.yaml`:
+
 ```yaml
 dependencies:
-  nbody_sim_core: ^0.1.2
+  nbody_sim_core: ^<latest>
 ```
 
 ## Public API
@@ -84,19 +96,27 @@ Future<void> main() async {
 
 Use whichever backend fits your runtime and performance goals.
 
-1. `DartSimulationEngine`
-   - Easiest setup, 100% pure Dart.
-   - Fully supported on **Web** and **WebAssembly (WASM)**, mobile, desktop, and server.
-   - No native prerequisites or toolchains required.
-2. `IsolateSimulationEngine`
-   - Runs simulation off the UI/main isolate.
-   - Backend selection: `EngineBackend.auto`, `EngineBackend.rust`, `EngineBackend.dart`.
-3. `RustFfiSimulationEngine`
-   - Direct native Rust backend via `dart:ffi`.
-   - Highest performance path when native library is present (desktop/mobile).
-   - Automatically stubbed on Web runtimes via conditional compilation.
+| Backend | Runtime Platform | Setup | Characteristics |
+| :--- | :--- | :--- | :--- |
+| **`DartSimulationEngine`** | Web (WASM & JS), Desktop, Mobile, Server | Zero config | 100% pure Dart, Runge-Kutta 4th Order, Barnes-Hut quadtrees. Universal cross-platform compatibility. |
+| **`IsolateSimulationEngine`** | Native Desktop, Mobile, Server | Zero config | Runs simulation stepping in a background Dart isolate to keep the UI thread unblocked. |
+| **`RustFfiSimulationEngine`** | macOS, Linux, Windows | Zero config (bundled) | High-throughput native Rust engine via C-ABI dynamic libraries (`.dylib`, `.so`, `.dll`). Automatically stubbed on Web. |
 
-Example:
+### Usage Examples
+
+#### 1. Pure Dart Engine (Universal Web, WASM, Mobile, Desktop)
+
+```dart
+import 'package:nbody_sim_core/nbody_sim_core.dart';
+
+final engine = DartSimulationEngine();
+await engine.initialize(
+  config: SimulationConfig.scientificDefault,
+  bodies: [ /* ... */ ],
+);
+```
+
+#### 2. Background Isolate Engine
 
 ```dart
 import 'package:nbody_sim_core/engine.dart';
@@ -104,20 +124,16 @@ import 'package:nbody_sim_core/models.dart';
 
 final engine = IsolateSimulationEngine(
   backend: EngineBackend.auto,
-  // Optional:
-  // rustLibraryPath: '/absolute/path/to/libgravity_engine.dylib',
 );
 ```
 
-Direct Rust backend:
+#### 3. Native Rust FFI Engine (Bundled Desktop Binaries)
 
 ```dart
 import 'package:nbody_sim_core/engine.dart';
 
-final engine = RustFfiSimulationEngine(
-  // Optional if GRAVITY_ENGINE_LIB is set or library is in ./native:
-  libraryPath: '/absolute/path/to/libgravity_engine.dylib',
-);
+// Automatically discovers bundled native library for the current host ABI
+final engine = RustFfiSimulationEngine();
 ```
 
 ## Rust Native Build
