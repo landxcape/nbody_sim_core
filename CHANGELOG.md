@@ -1,3 +1,6 @@
+## 0.1.8
+- Docs: Streamlined CLI installation instructions and documentation polish.
+
 ## 0.1.7
 - Add conditional isolate engine stubbing (`isolate_simulation_engine_stub.dart`) for Web and WebAssembly (WASM) runtime compatibility.
 
