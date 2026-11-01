@@ -13,19 +13,12 @@ Core data models, numerical integrators, and engine backends for N-body gravitat
 4. Schema migration and validation helpers.
 5. Embedded Rust crate + native build scripts.
 
-## Install
+## Installation
 
-Add via CLI:
+Add the package to your project:
 
 ```bash
 dart pub add nbody_sim_core
-```
-
-Or add to your `pubspec.yaml`:
-
-```yaml
-dependencies:
-  nbody_sim_core: ^<latest>
 ```
 
 ## Public API
