@@ -5,6 +5,9 @@ Core data models, numerical integrators, and engine backends for N-body gravitat
 [![pub package](https://img.shields.io/pub/v/nbody_sim_core.svg)](https://pub.dev/packages/nbody_sim_core)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-web%20%7C%20wasm%20%7C%20macos%20%7C%20linux%20%7C%20windows%20%7C%20ios%20%7C%20android-blue)](https://pub.dev/packages/nbody_sim_core)
+[![Interactive Sandbox](https://img.shields.io/badge/demo-interactive%20sandbox-0284C7.svg)](https://shakyapurna.com.np/lab/nbody_sim_core/sandbox)
+
+An [interactive sandbox](https://shakyapurna.com.np/lab/nbody_sim_core/sandbox) is available to run and interact with real-time gravitational simulations in the browser.
 
 `nbody_sim_core` provides:
 1. Physics domain models and contracts.
